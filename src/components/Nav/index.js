@@ -1,20 +1,26 @@
-const categories = [
-  ['commercial', 'Photos of grocery stores, food trucks, and other commercial projects'],
-  ['portraits','Portraits of people in my life'],
-  ['food','Delicious delicacies'],
-  ['landscape','Fields, farmhouses, waterfalls, and the beauty of nature'],
-].map(([name, description]) => ({ name, description }));
+import { useEffect } from "react";
+import { capitalizeFirstLetter } from "../../utils/helpers";
 
-function categorySelected(name) {
-  return () => console.log(`${name} clicked`);
-}
+function Nav({ categories = [], currentCategory = {}, setCurrentCategory = _ => _ }) {
+  const selectCategory = (category) => () => setCurrentCategory(category);
+  const activeNav = ({name}) => currentCategory.name === name && 'navActive';
+  const categoryVmMap = (category) => ({
+    key: category.name,
+    click: selectCategory(category),
+    selected: activeNav(category),
+    title: capitalizeFirstLetter(category.name),
+  });
+  const categoriesVm = categories.map(categoryVmMap);
+  const updatePageTitle = () => document.title = capitalizeFirstLetter(currentCategory.name ?? '');
 
-function Nav() {
+  useEffect(updatePageTitle, [currentCategory]);
+
   return (
-    <header>
+    <header className="flex-row px-1">
       <h2>
         <a data-testid="link" href="/">'
-          <span role="img" aria-label="camera">📸</span> Oh Snap!
+          <span role="img" aria-label="camera">{" "}📸</span>{" "}
+          Oh Snap!
         </a>
       </h2>
       <nav>
@@ -27,9 +33,9 @@ function Nav() {
           <li>
             <span>Contact</span>
           </li>
-          {categories.map(({ name }) => (
-            <li className="mx-1" key={name}>
-              <span onClick={categorySelected(name)}>{name}</span>
+          {categoriesVm.map(({ key, selected, title, click }) => (
+            <li className={`mx-1 ${selected}`} key={key}>
+              <span onClick={click}>{title}</span>
             </li>
           ))}
         </ul>
