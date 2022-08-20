@@ -12,25 +12,21 @@ const mockSetCurrentCategory = jest.fn();
 const mockContactSelected = jest.fn();
 const mockSetContactSelected = jest.fn();
 
+const props = Object.freeze({
+  categories,
+  contactSelected: mockContactSelected,
+  currentCategory: mockCurrentCategory,
+  setContactSelected: mockSetContactSelected,
+  setCurrentCategory: mockSetCurrentCategory,
+});
+
 describe('Nav component', () => {
   it('renders', () => {
-    render(<Nav
-      categories={categories}
-      setCurrentCategory={mockSetCurrentCategory}
-      currentCategory={mockCurrentCategory}
-      contactSelected={mockContactSelected}
-      setContactSelected={mockSetContactSelected}
-    />);
+    render(<Nav { ...props } />);
   });
 
   it('matches snapshot', () => {
-    const { asFragment } = render(<Nav
-      categories={categories}
-      setCurrentCategory={mockSetCurrentCategory}
-      currentCategory={mockCurrentCategory}
-      contactSelected={mockContactSelected}
-      setContactSelected={mockSetContactSelected}
-    />);
+    const { asFragment } = render(<Nav { ...props }/>);
 
     expect(asFragment()).toMatchSnapshot();
   });
@@ -38,13 +34,7 @@ describe('Nav component', () => {
 
 describe('emoji is visible', () => {
   it('inserts emoji into the h2', () => {
-    const { getByLabelText } = render(<Nav
-      categories={categories}
-      setCurrentCategory={mockSetCurrentCategory}
-      currentCategory={mockCurrentCategory}
-      contactSelected={mockContactSelected}
-      setContactSelected={mockSetContactSelected}
-    />);
+    const { getByLabelText } = render(<Nav { ...props } />);
 
     expect(getByLabelText('camera')).toHaveTextContent('📸');
   });
@@ -52,13 +42,7 @@ describe('emoji is visible', () => {
 
 describe('links are visible', () => {
   it('inserts text into the links', () => {
-    const { getByTestId } = render(<Nav
-      categories={categories}
-      setCurrentCategory={mockSetCurrentCategory}
-      currentCategory={mockCurrentCategory}
-      contactSelected={mockContactSelected}
-      setContactSelected={mockSetContactSelected}
-    />);
+    const { getByTestId } = render(<Nav { ...props } />);
     expect(getByTestId('link')).toHaveTextContent('Oh Snap!');
     expect(getByTestId('about')).toHaveTextContent('About me');
   });
