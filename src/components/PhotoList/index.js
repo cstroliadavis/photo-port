@@ -30,34 +30,28 @@ export default function PhotoList({ category }) {
   const [currentPhoto, setCurrentPhoto] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const toggleModal = (image, index) => {
+    setCurrentPhoto({ ...image, index });
+    setIsModalOpen(!isModalOpen);
+  }
+
   const vm = {
     photos: photos
       .filter((photo) => photo.category === category)
       .map((image, i) => ({
-        id: image.name,
-        image: require(`../../assets/small/${category}/${i}.jpg`),
+        key: image.name,
+        src: require(`../../assets/small/${category}/${i}.jpg`),
         alt: image.name,
-        toggle: () => {
-          setCurrentPhoto({ ...image, index: i });
-          setIsModalOpen(true);
-        }
+        onClick: () => toggleModal(image, i)
       }))
   };
 
   // view
   return (
     <div>
-      { isModalOpen && <Modal currentPhoto={currentPhoto}/> }
+      { isModalOpen && <Modal { ...{currentPhoto} } onClose={toggleModal} /> }
       <div className="flex-row">
-        {vm.photos.map(({ id, image, alt, toggle}) => (
-          <img
-            key={id}
-            src={image}
-            alt={alt}
-            className="img-thumbnail mx-1"
-            onClick={toggle}
-          />
-        ))}
+        {vm.photos.map((photo) => (<img className="img-thumbnail mx-1" alt={photo.alt} {...photo} />))}
       </div>
     </div>
   )

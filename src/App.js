@@ -19,12 +19,13 @@ function App() {
 
   return (
     <div>
-      <Nav
-        categories={categories}
-        setCurrentCategory={setCurrentCategory}
-        currentCategory={currentCategory}
-        contactSelected={contactSelected}
-        setContactSelected={setContactSelected}
+      <Nav { ...{
+        categories,
+        setCurrentCategory,
+        currentCategory,
+        contactSelected,
+        setContactSelected,
+      }}
       ></Nav>
       <main>
         {!contactSelected ? (
