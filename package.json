@@ -1,8 +1,11 @@
 {
   "name": "photo-port",
   "version": "0.1.0",
+  "homepage": "http://cstroliadavis.github.io/photo-port",
   "private": true,
   "scripts": {
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
@@ -35,6 +38,7 @@
   "devDependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^13.5.0"
+    "@testing-library/user-event": "^13.5.0",
+    "gh-pages": "^4.0.0"
   }
 }
