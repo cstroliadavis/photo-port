@@ -1,24 +1,44 @@
 import { useEffect } from "react";
 import { capitalizeFirstLetter } from "../../utils/helpers";
 
-function Nav({ categories = [], currentCategory = {}, setCurrentCategory = _ => _ }) {
-  const selectCategory = (category) => () => setCurrentCategory(category);
-  const activeNav = ({name}) => currentCategory.name === name && 'navActive';
-  const categoryVmMap = (category) => ({
-    key: category.name,
-    click: selectCategory(category),
-    selected: activeNav(category),
-    title: capitalizeFirstLetter(category.name),
-  });
-  const categoriesVm = categories.map(categoryVmMap);
+export default function Nav(props) {
+  const {
+    categories = [],
+    currentCategory = {},
+    setCurrentCategory = _ => _,
+    contactSelected,
+    setContactSelected,
+  } = props;
+
+  // logic
   const updatePageTitle = () => document.title = capitalizeFirstLetter(currentCategory.name ?? '');
+
+  const vm = {
+    about: {
+      activate: () => setContactSelected(false),
+    },
+    contact: {
+      activate: () => setContactSelected(true),
+      selected: contactSelected && 'navActive',
+    },
+    categories: categories.map((category) => ({
+      key: category.name,
+      activate: () => {
+        setCurrentCategory(category);
+        setContactSelected(false);
+      },
+      selected: currentCategory.name === category.name && !contactSelected && 'navActive',
+      title: capitalizeFirstLetter(category.name),
+    }))
+  };
 
   useEffect(updatePageTitle, [currentCategory]);
 
+  // view
   return (
     <header className="flex-row px-1">
       <h2>
-        <a data-testid="link" href="/">'
+        <a data-testid="link" href="/">
           <span role="img" aria-label="camera">{" "}📸</span>{" "}
           Oh Snap!
         </a>
@@ -26,16 +46,16 @@ function Nav({ categories = [], currentCategory = {}, setCurrentCategory = _ => 
       <nav>
         <ul className="flex-row">
           <li className="mx-2">
-            <a data-testid="about" href="#about">
+            <a data-testid="about" href="#about" onClick={vm.about.activate}>
               About me
             </a>
           </li>
-          <li>
-            <span>Contact</span>
+          <li className={`mx-2 ${vm.contact.selected}`}>
+            <span onClick={vm.contact.activate}>Contact</span>
           </li>
-          {categoriesVm.map(({ key, selected, title, click }) => (
+          {vm.categories.map(({ key, selected, title, activate }) => (
             <li className={`mx-1 ${selected}`} key={key}>
-              <span onClick={click}>{title}</span>
+              <span onClick={activate}>{title}</span>
             </li>
           ))}
         </ul>
@@ -43,5 +63,3 @@ function Nav({ categories = [], currentCategory = {}, setCurrentCategory = _ => 
     </header>
   );
 }
-
-export default Nav;
