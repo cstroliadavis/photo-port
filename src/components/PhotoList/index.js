@@ -1,4 +1,5 @@
 import { useState } from "react";
+import Modal from '../Modal';
 
 const photoList = [
   ['Grocery aisle', 'commercial', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc ultricie'],
@@ -23,20 +24,39 @@ const photoList = [
 ].map(([name, category, description]) => ({ name, category, description }));
 
 export default function PhotoList({ category }) {
-  const [photos] = useState(photoList);
-  const photosVm = photos
-    .filter((photo) => photo.category === category)
-    .map(({ name }, i) => ({
-      id: name,
-      image: require(`../../assets/small/${category}/${i}.jpg`),
-      alt: name,
-    }));
 
+  // logic
+  const [photos] = useState(photoList);
+  const [currentPhoto, setCurrentPhoto] = useState();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const vm = {
+    photos: photos
+      .filter((photo) => photo.category === category)
+      .map((image, i) => ({
+        id: image.name,
+        image: require(`../../assets/small/${category}/${i}.jpg`),
+        alt: image.name,
+        toggle: () => {
+          setCurrentPhoto({ ...image, index: i });
+          setIsModalOpen(true);
+        }
+      }))
+  };
+
+  // view
   return (
     <div>
+      { isModalOpen && <Modal currentPhoto={currentPhoto}/> }
       <div className="flex-row">
-        {photosVm.map(({ id, image, alt}) => (
-          <img key={id} src={image} alt={alt} className="img-thumbnail mx-1" />
+        {vm.photos.map(({ id, image, alt, toggle}) => (
+          <img
+            key={id}
+            src={image}
+            alt={alt}
+            className="img-thumbnail mx-1"
+            onClick={toggle}
+          />
         ))}
       </div>
     </div>
