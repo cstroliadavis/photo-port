@@ -1,10 +1,10 @@
 {
   "name": "photo-port",
   "version": "0.1.0",
-  "homepage": "http://cstroliadavis.github.io/photo-port",
+  "homepage": "https://cstroliadavis.github.io/photo-port",
   "private": true,
   "scripts": {
-    "predeploy": "yarn build",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
